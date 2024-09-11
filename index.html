@@ -27,8 +27,7 @@
         .row {
             display: flex;
             justify-content: space-between;
-            padding: 2px 0;
-            /* 调小间距 */
+            padding: 2px 0; /* 调小间距 */
         }
 
         .row span {
@@ -43,8 +42,7 @@
         }
 
         h3 {
-            margin-bottom: 5px;
-            /* 减少日期与班次行的间距 */
+            margin-bottom: 5px; /* 减少日期与班次行的间距 */
         }
 
         hr {
@@ -80,16 +78,26 @@
 
         const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
 
+        // 计算两个日期之间的天数差
+        function daysBetween(startDate, endDate) {
+            const oneDay = 24 * 60 * 60 * 1000; // 一天的毫秒数
+            return Math.floor((endDate - startDate) / oneDay);
+        }
+
         function generateSchedule(startDate) {
             const scheduleDiv = document.getElementById('schedule');
             scheduleDiv.innerHTML = '';  // 清空之前的内容
+
+            const baseDate = new Date(2024, 8, 1); // 起始日期设定为2024年9月1日（0基的月份）
 
             for (let i = 0; i < 7; i++) {
                 const currentDate = new Date(startDate);
                 currentDate.setDate(currentDate.getDate() + i);
 
-                // 根据天数计算班次循环
-                const cycleIndex = (currentDate.getDate() - 1) % 3;
+                // 计算从起始日期到当前日期的累积天数
+                const totalDays = daysBetween(baseDate, currentDate);
+                const cycleIndex = totalDays % 3;  // 使用累积天数进行循环
+
                 const [primary, secondary, tertiary] = persons[cycleIndex];
 
                 // 格式化日期为 yyyy-mm-dd 和 星期几
