@@ -95,12 +95,14 @@
                 // 格式化日期为 yyyy-mm-dd 和 星期几
                 const dateStr = currentDate.toISOString().split('T')[0];
                 const weekDay = weekDays[currentDate.getDay()];
+
                 // 检查是否是周末
                 const isWeekend = currentDate.getDay() === 0 || currentDate.getDay() === 6;
                 const dateClass = isWeekend ? 'weekend' : '';
+
                 const scheduleHTML = `
                     <div>
-                        <h3>${dateStr} (${weekDay})</h3>
+                        <h3 class="${dateClass}">${dateStr} (${weekDay})</h3>
                         <div class="row">
                             <span>主班：${primary}</span> | 
                             <span>副班：${secondary}</span> | 
