@@ -100,8 +100,8 @@
 
                 const [primary, secondary, tertiary] = persons[cycleIndex];
 
-                // 格式化日期为 yyyy-mm-dd 和 星期几
-                const dateStr = currentDate.toISOString().split('T')[0];
+                // 使用toLocaleDateString格式化日期
+                const dateStr = currentDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' });
                 const weekDay = weekDays[currentDate.getDay()];
 
                 // 检查是否是周末
