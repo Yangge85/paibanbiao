@@ -27,7 +27,8 @@
         .row {
             display: flex;
             justify-content: space-between;
-            padding: 5px 0;
+            padding: 2px 0;
+            /* 调小间距 */
         }
 
         .row span {
@@ -39,6 +40,11 @@
         .row span:nth-child(2),
         .row span:nth-child(3) {
             width: 33%;
+        }
+
+        h3 {
+            margin-bottom: 5px;
+            /* 减少日期与班次行的间距 */
         }
 
         hr {
@@ -53,10 +59,6 @@
         .weekend {
             color: red;
             /* 周六周日显示为红色 */
-        }
-
-        hr {
-            margin: 10px 0;
         }
     </style>
 </head>
