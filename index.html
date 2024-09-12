@@ -8,66 +8,120 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         h1 {
             text-align: center;
-            margin-left: 0;
-            margin-right: 0;
+            font-size: 1.5rem;
+            /* 调整标题字体大小 */
+            margin: 20px 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+
+        /* 日期选择部分靠右对齐 */
+        .date-container {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1rem;
+            /* 调整选择日期标签字体大小 */
+        }
+
+        input[type="date"] {
+            font-size: 1rem;
         }
 
         .schedule {
-            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            /* 调整表格字体大小 */
         }
 
-        .person {
-            font-weight: bold;
-        }
-
-        .row {
-            display: flex;
-            justify-content: space-between;
-            padding: 2px 0; /* 调小间距 */
-        }
-
-        .row span {
-            flex: 1;
+        .schedule th,
+        .schedule td {
+            border: 1px solid #ddd;
+            padding: 8px;
             text-align: center;
         }
 
-        .row span:nth-child(1),
-        .row span:nth-child(2),
-        .row span:nth-child(3) {
-            width: 33%;
+        /* 缩小日期列的宽度 */
+        .schedule th.date-col,
+        .schedule td.date-col {
+            width: 90px;
+            /* 设置固定宽度 */
         }
 
-        h3 {
-            margin-bottom: 5px; /* 减少日期与班次行的间距 */
-        }
-
-        hr {
-            margin: 10px 0;
-        }
-
-        .date-heading {
-            font-size: 16px;
-            font-weight: bold;
+        .schedule th {
+            background-color: #f4f4f4;
         }
 
         .weekend {
             color: red;
-            /* 周六周日显示为红色 */
+            font-weight: bold;
+        }
+
+        .schedule tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* 在小屏幕上自适应 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            label,
+            input[type="date"],
+            .schedule th,
+            .schedule td {
+                font-size: 0.8rem;
+                padding: 5px;
+            }
+
+            /* 缩小日期列的宽度在移动端 */
+            .schedule th.date-col,
+            .schedule td.date-col {
+                width: 70px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h1 style="text-align: center; width: 100%;">驻村工作队排班表</h1>
+    <div class="container">
+        <h1>前韩家庄驻村工作队排班表</h1>
 
-    <label for="date">选择日期：</label>
-    <input type="date" id="date" />
+        <!-- 日期选择部分 -->
+        <div class="date-container">
+            <label for="date">选择日期：</label>
+            <input type="date" id="date" />
+        </div>
 
-    <div id="schedule" class="schedule"></div>
+        <!-- 排班表 -->
+        <table id="schedule" class="schedule">
+            <thead>
+                <tr>
+                    <th class="date-col">日期</th>
+                    <th>星期</th>
+                    <th>主班</th>
+                    <th>副班 1</th>
+                    <th>副班 2</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
     <script>
         const persons = [
@@ -85,8 +139,8 @@
         }
 
         function generateSchedule(startDate) {
-            const scheduleDiv = document.getElementById('schedule');
-            scheduleDiv.innerHTML = '';  // 清空之前的内容
+            const tbody = document.querySelector('#schedule tbody');
+            tbody.innerHTML = '';  // 清空之前的内容
 
             const baseDate = new Date(2024, 8, 1); // 起始日期设定为2024年9月1日（0基的月份）
 
@@ -100,7 +154,7 @@
 
                 const [primary, secondary, tertiary] = persons[cycleIndex];
 
-                // 使用toLocaleDateString格式化日期
+                // 使用 toLocaleDateString() 格式化日期为 yyyy-mm-dd
                 const dateStr = currentDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' });
                 const weekDay = weekDays[currentDate.getDay()];
 
@@ -108,19 +162,18 @@
                 const isWeekend = currentDate.getDay() === 0 || currentDate.getDay() === 6;
                 const dateClass = isWeekend ? 'weekend' : '';
 
-                const scheduleHTML = `
-                    <div>
-                        <h3 class="${dateClass}">${dateStr} (${weekDay})</h3>
-                        <div class="row">
-                            <span>主班：${primary}</span> | 
-                            <span>副班：${secondary}</span> | 
-                            <span>副班：${tertiary}</span>
-                        </div>
-                    </div>
-                    <hr/>
+                // 添加一行到表格
+                const rowHTML = `
+                    <tr>
+                        <td class="date-col ${dateClass}">${dateStr}</td>
+                        <td class="${dateClass}">${weekDay}</td>
+                        <td>${primary}</td>
+                        <td>${secondary}</td>
+                        <td>${tertiary}</td>
+                    </tr>
                 `;
 
-                scheduleDiv.innerHTML += scheduleHTML;
+                tbody.innerHTML += rowHTML;
             }
         }
 
