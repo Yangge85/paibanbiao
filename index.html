@@ -10,6 +10,9 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            /* 禁止水平滚动 */
         }
 
         h1 {
@@ -20,10 +23,13 @@
         }
 
         .container {
-            width: 100%;
-            max-width: 1000px;
+            width: 95%;
+            /* 页面宽度缩小5% */
+            max-width: 950px;
+            /* 确保在大屏幕上也缩小 */
             margin: 0 auto;
-            padding: 0 10px;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         /* 日期选择部分靠右对齐 */
@@ -46,6 +52,8 @@
             border-collapse: collapse;
             font-size: 0.9rem;
             /* 调整表格字体大小 */
+            table-layout: fixed;
+            /* 防止表格超出边界 */
         }
 
         .schedule th,
@@ -115,8 +123,8 @@
                     <th class="date-col">日期</th>
                     <th>星期</th>
                     <th>主班</th>
-                    <th>副班 1</th>
-                    <th>副班 2</th>
+                    <th>副班</th>
+                    <th>副班</th>
                 </tr>
             </thead>
             <tbody></tbody>
