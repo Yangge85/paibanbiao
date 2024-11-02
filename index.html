@@ -12,27 +12,22 @@
             padding: 0;
             box-sizing: border-box;
             overflow-x: hidden;
-            /* 禁止水平滚动 */
         }
 
         h1 {
             text-align: center;
             font-size: 1.5rem;
-            /* 调整标题字体大小 */
             margin: 20px 0;
         }
 
         .container {
             width: 95%;
-            /* 页面宽度缩小5% */
             max-width: 950px;
-            /* 确保在大屏幕上也缩小 */
             margin: 0 auto;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* 日期选择部分靠右对齐 */
         .date-container {
             text-align: right;
             margin-bottom: 20px;
@@ -40,7 +35,6 @@
 
         label {
             font-size: 1rem;
-            /* 调整选择日期标签字体大小 */
         }
 
         input[type="date"] {
@@ -51,9 +45,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.9rem;
-            /* 调整表格字体大小 */
             table-layout: fixed;
-            /* 防止表格超出边界 */
         }
 
         .schedule th,
@@ -61,13 +53,15 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
-        /* 缩小日期列的宽度 */
         .schedule th.date-col,
         .schedule td.date-col {
             width: 90px;
-            /* 设置固定宽度 */
+            font-size: 0.75rem;
         }
 
         .schedule th {
@@ -76,14 +70,32 @@
 
         .weekend {
             color: red;
-            font-weight: bold;
         }
 
         .schedule tr:nth-child(even) {
             background-color: #f9f9f9;
         }
 
-        /* 在小屏幕上自适应 */
+        .badge-container {
+            font-size: 0.4rem;
+        }
+
+        .badge-day {
+            background-color: blue;
+            color: white;
+            padding: 1px 3px;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+
+        .badge-market {
+            background-color: red;
+            color: white;
+            padding: 1px 3px;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.2rem;
@@ -93,14 +105,17 @@
             input[type="date"],
             .schedule th,
             .schedule td {
-                font-size: 0.8rem;
-                padding: 5px;
+                font-size: 0.7rem;
+                padding: 4px;
             }
 
-            /* 缩小日期列的宽度在移动端 */
             .schedule th.date-col,
             .schedule td.date-col {
-                width: 70px;
+                width: 65px;
+            }
+
+            .badge-container {
+                font-size: 0.4rem;
             }
         }
     </style>
@@ -110,13 +125,11 @@
     <div class="container">
         <h1>前韩家庄驻村工作队排班表</h1>
 
-        <!-- 日期选择部分 -->
         <div class="date-container">
             <label for="date">选择日期：</label>
             <input type="date" id="date" />
         </div>
 
-        <!-- 排班表 -->
         <table id="schedule" class="schedule">
             <thead>
                 <tr>
@@ -125,6 +138,7 @@
                     <th>主班</th>
                     <th>副班</th>
                     <th>副班</th>
+                    <th>备注</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -133,44 +147,60 @@
 
     <script>
         const persons = [
-            ['杜　阳', '左平周', '王勇伟'],  // 9月1日，杜阳用全角空格调整宽度
-            ['王勇伟', '杜　阳', '左平周'],  // 9月2日
-            ['左平周', '王勇伟', '杜　阳']   // 9月3日
+            ['杜　阳', '左平周', '王勇伟'],
+            ['王勇伟', '杜　阳', '左平周'],
+            ['左平周', '王勇伟', '杜　阳']
         ];
 
         const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+        const lunarMarketDays = { 河沿集: [2, 7, 12, 17, 22, 27], 北沼集: [4, 9, 14, 19, 24, 29] };
 
-        // 计算两个日期之间的天数差
+        function convertToLunarText(day) {
+            if (day < 10) return '初' + '一二三四五六七八九'[day - 1];
+            if (day < 20) return '十' + (day > 10 ? '一二三四五六七八九'[day - 11] : '');
+            if (day < 30) return '廿' + (day > 20 ? '一二三四五六七八九'[day - 21] : '');
+            return '三十';
+        }
+
         function daysBetween(startDate, endDate) {
-            const oneDay = 24 * 60 * 60 * 1000; // 一天的毫秒数
+            const oneDay = 24 * 60 * 60 * 1000;
             return Math.floor((endDate - startDate) / oneDay);
         }
 
         function generateSchedule(startDate) {
             const tbody = document.querySelector('#schedule tbody');
-            tbody.innerHTML = '';  // 清空之前的内容
+            tbody.innerHTML = '';
 
-            const baseDate = new Date(2024, 8, 1); // 起始日期设定为2024年9月1日（0基的月份）
+            const baseDate = new Date(2024, 8, 1);
 
             for (let i = 0; i < 7; i++) {
                 const currentDate = new Date(startDate);
                 currentDate.setDate(currentDate.getDate() + i);
 
-                // 计算从起始日期到当前日期的累积天数
                 const totalDays = daysBetween(baseDate, currentDate);
-                const cycleIndex = totalDays % 3;  // 使用累积天数进行循环
+                const cycleIndex = totalDays % 3;
 
                 const [primary, secondary, tertiary] = persons[cycleIndex];
-
-                // 使用 toLocaleDateString() 格式化日期为 yyyy-mm-dd
                 const dateStr = currentDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' });
                 const weekDay = weekDays[currentDate.getDay()];
 
-                // 检查是否是周末
                 const isWeekend = currentDate.getDay() === 0 || currentDate.getDay() === 6;
                 const dateClass = isWeekend ? 'weekend' : '';
 
-                // 添加一行到表格
+                const lunarDay = (totalDays % 30) + 1;
+                let badgeHTML = '';
+
+                for (const [market, days] of Object.entries(lunarMarketDays)) {
+                    if (days.includes(lunarDay)) {
+                        badgeHTML = `
+                            <span class="badge-container">
+                                <span class="badge-day">${convertToLunarText(lunarDay)}</span>
+                                <span class="badge-market">${market}</span>
+                            </span>
+                        `;
+                    }
+                }
+
                 const rowHTML = `
                     <tr>
                         <td class="date-col ${dateClass}">${dateStr}</td>
@@ -178,6 +208,7 @@
                         <td>${primary}</td>
                         <td>${secondary}</td>
                         <td>${tertiary}</td>
+                        <td>${badgeHTML}</td>
                     </tr>
                 `;
 
@@ -185,13 +216,11 @@
             }
         }
 
-        // 页面加载时显示今天及未来7天的排班
         window.onload = function () {
             const today = new Date();
             generateSchedule(today);
         };
 
-        // 当用户选择了日期后，显示从该日期开始的7天排班
         document.getElementById('date').addEventListener('change', function () {
             const selectedDate = new Date(this.value);
             generateSchedule(selectedDate);
