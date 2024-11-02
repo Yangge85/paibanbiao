@@ -16,7 +16,7 @@
 
         h1 {
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.4rem; /* 进一步调整标题字体大小 */
             margin: 20px 0;
         }
 
@@ -34,24 +34,24 @@
         }
 
         label {
-            font-size: 1rem;
+            font-size: 0.9rem; /* 调整选择日期标签字体大小 */
         }
 
         input[type="date"] {
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         .schedule {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
+            font-size: 0.8rem; /* 进一步调整表格字体大小 */
             table-layout: fixed;
         }
 
         .schedule th,
         .schedule td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 6px; /* 调整单元格内边距 */
             text-align: center;
             overflow: hidden;
             white-space: nowrap;
@@ -61,7 +61,7 @@
         .schedule th.date-col,
         .schedule td.date-col {
             width: 90px;
-            font-size: 0.75rem;
+            font-size: 0.65rem; /* 更小的日期列字体大小 */
         }
 
         .schedule th {
@@ -77,7 +77,7 @@
         }
 
         .badge-container {
-            font-size: 0.2rem;
+            font-size: 0.4rem; /* 保持标志字体大小 */
         }
 
         .badge-day {
@@ -98,24 +98,24 @@
 
         @media (max-width: 768px) {
             h1 {
-                font-size: 1.2rem;
+                font-size: 1.2rem; /* 小屏幕标题字体 */
             }
 
             label,
             input[type="date"],
             .schedule th,
             .schedule td {
-                font-size: 0.7rem;
-                padding: 4px;
+                font-size: 0.6rem; /* 进一步调整小屏幕上的字体大小 */
+                padding: 4px; /* 调整内边距 */
             }
 
             .schedule th.date-col,
             .schedule td.date-col {
-                width: 65px;
+                width: 65px; /* 缩小日期列宽度 */
             }
 
             .badge-container {
-                font-size: 0.2rem;
+                font-size: 0.4rem;
             }
         }
     </style>
