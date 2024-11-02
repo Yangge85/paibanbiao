@@ -16,7 +16,7 @@
 
         h1 {
             text-align: center;
-            font-size: 1.4rem; /* 进一步调整标题字体大小 */
+            font-size: 1.4rem; /* 标题字体大小 */
             margin: 20px 0;
         }
 
@@ -34,7 +34,7 @@
         }
 
         label {
-            font-size: 0.9rem; /* 调整选择日期标签字体大小 */
+            font-size: 0.9rem; /* 选择日期标签字体大小 */
         }
 
         input[type="date"] {
@@ -44,24 +44,29 @@
         .schedule {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.8rem; /* 进一步调整表格字体大小 */
-            table-layout: fixed;
+            font-size: 0.8rem; /* 表格整体字体大小 */
+            table-layout: fixed; /* 固定表格布局 */
         }
 
         .schedule th,
         .schedule td {
             border: 1px solid #ddd;
-            padding: 6px; /* 调整单元格内边距 */
+            padding: 4px; /* 调整单元格内边距 */
             text-align: center;
             overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+            white-space: nowrap; /* 不换行 */
+            text-overflow: ellipsis; /* 省略号 */
         }
 
         .schedule th.date-col,
         .schedule td.date-col {
-            width: 90px;
-            font-size: 0.65rem; /* 更小的日期列字体大小 */
+            width: 90px; /* 日期列宽度 */
+            font-size: 0.65rem; /* 日期列字体大小 */
+        }
+
+        .schedule td:nth-child(6) {
+            width: 150px; /* 增加备注列宽度 */
+            font-size: 0.65rem; /* 备注列字体大小 */
         }
 
         .schedule th {
@@ -105,17 +110,21 @@
             input[type="date"],
             .schedule th,
             .schedule td {
-                font-size: 0.6rem; /* 进一步调整小屏幕上的字体大小 */
-                padding: 4px; /* 调整内边距 */
+                font-size: 0.6rem; /* 小屏幕字体大小 */
+                padding: 3px; /* 调整小屏幕单元格内边距 */
             }
 
             .schedule th.date-col,
             .schedule td.date-col {
-                width: 65px; /* 缩小日期列宽度 */
+                width: 65px; /* 小屏幕日期列宽度 */
             }
 
             .badge-container {
                 font-size: 0.4rem;
+            }
+
+            .schedule td:nth-child(6) {
+                width: 120px; /* 小屏幕上增加备注列宽度 */
             }
         }
     </style>
