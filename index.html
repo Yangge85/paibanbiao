@@ -57,7 +57,6 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             height: 20px;
-            /* 固定高度 */
         }
 
         .schedule th.date-col,
@@ -165,6 +164,14 @@
         const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
         const lunarMarketDays = { 河沿集: [2, 7, 12, 17, 22, 27], 北沼集: [4, 9, 14, 19, 24, 29] };
 
+        // 2024和2025年各月的天数
+        const lunarMonths = {
+            2024: [29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30], // 354天
+            2025: [30, 29, 30, 29, 30, 29, 30, 28, 30, 30, 30, 30]  // 384天, 包含闰六月
+        };
+
+        const lunarYearStartDate = new Date(2024, 10, 1); // 2024年11月1日为农历十月初一
+
         function convertToLunarText(day) {
             if (day < 10) return '初' + '一二三四五六七八九'[day - 1];
             if (day < 20) return '十' + (day > 10 ? '一二三四五六七八九'[day - 11] : '');
@@ -172,32 +179,43 @@
             return '三十';
         }
 
-        function daysBetween(startDate, endDate) {
-            const oneDay = 24 * 60 * 60 * 1000;
-            return Math.floor((endDate - startDate) / oneDay);
+        function generateLunarDay(gregorianDate) {
+            const year = gregorianDate.getFullYear();
+            const totalDays = Math.floor((gregorianDate - lunarYearStartDate) / (24 * 60 * 60 * 1000));
+
+            // 根据年份选择对应的农历月份
+            const lunarDays = lunarMonths[year];
+            let lunarDay = (totalDays % lunarDays.reduce((a, b) => a + b, 0)) + 1; // 计算农历天数
+
+            // 计算月和天数
+            let monthIndex = 0;
+            let dayCount = lunarDays[monthIndex];
+
+            while (lunarDay > dayCount) {
+                lunarDay -= dayCount;
+                monthIndex++;
+                if (monthIndex >= lunarDays.length) break;
+                dayCount = lunarDays[monthIndex];
+            }
+
+            return lunarDay; // 返回农历天数
         }
 
         function generateSchedule(startDate) {
             const tbody = document.querySelector('#schedule tbody');
             tbody.innerHTML = '';
 
-            const baseDate = new Date(2024, 10, 1);
-
             for (let i = 0; i < 7; i++) {
                 const currentDate = new Date(startDate);
                 currentDate.setDate(currentDate.getDate() + i);
 
-                const totalDays = daysBetween(baseDate, currentDate);
-                const cycleIndex = totalDays % 3;
-
-                const [primary, secondary, tertiary] = persons[cycleIndex];
+                const lunarDay = generateLunarDay(currentDate);
                 const dateStr = currentDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' });
                 const weekDay = weekDays[currentDate.getDay()];
 
                 const isWeekend = currentDate.getDay() === 0 || currentDate.getDay() === 6;
                 const dateClass = isWeekend ? 'weekend' : '';
 
-                const lunarDay = (totalDays % 30) + 1;
                 let badgeHTML = '';
 
                 for (const [market, days] of Object.entries(lunarMarketDays)) {
@@ -215,10 +233,10 @@
                     <tr>
                         <td class="date-col ${dateClass}">${dateStr}</td>
                         <td class="${dateClass}">${weekDay}</td>
-                        <td>${primary}</td>
-                        <td>${secondary}</td>
-                        <td>${tertiary}</td>
-                        <td class="note">${badgeHTML}</td> <!-- 添加类 -->
+                        <td>${persons[(i % 3)][0]}</td>
+                        <td>${persons[(i % 3)][1]}</td>
+                        <td>${persons[(i % 3)][2]}</td>
+                        <td class="note">${badgeHTML}</td>
                     </tr>
                 `;
 
