@@ -57,7 +57,6 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             height: 20px;
-            /* 固定高度 */
         }
 
         .schedule th.date-col,
@@ -93,8 +92,8 @@
 
         .badge-day,
         .badge-market {
-            background-color: blue;
-            color: white;
+            background-color: rgb(9, 9, 227);
+            color: rgb(255, 255, 255);
             padding: 1px 3px;
             width: 2rem;
             align-items: center;
@@ -148,7 +147,7 @@
                     <th>主班</th>
                     <th>副班</th>
                     <th>副班</th>
-                    <th>测试中不准确</th>
+                    <th>赶集</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -165,11 +164,57 @@
         const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
         const lunarMarketDays = { 河沿集: [2, 7, 12, 17, 22, 27], 北沼集: [4, 9, 14, 19, 24, 29] };
 
+        const lunarMonths = [
+            { days: 30 }, // 十月
+            { days: 29 }, // 冬月
+            { days: 30 }, // 腊月
+            { days: 30 }, // 正月
+            { days: 29 }, // 二月
+            { days: 30 }, // 三月
+            { days: 29 }, // 四月
+            { days: 29 }, // 五月
+            { days: 30 }, // 六月
+            { days: 29 }, // 闰六月
+            { days: 30 }, // 七月
+            { days: 29 }, // 八月
+            { days: 30 }, // 九月
+            { days: 30 }, // 十月
+            { days: 30 }, // 冬月
+            { days: 29 }, // 腊月
+            { days: 30 }, // 正月
+            { days: 29 }, // 二月
+            { days: 30 }, // 三月
+            { days: 29 }, // 四月
+            { days: 29 }, // 五月
+            { days: 30 }, // 六月
+            { days: 29 }, // 七月
+            { days: 29 }, // 八月
+            { days: 30 }, // 九月
+            { days: 30 }, // 十月
+            { days: 30 }, // 冬月
+            { days: 29 }  // 腊月
+        ];
+
+
         function convertToLunarText(day) {
             if (day < 10) return '初' + '一二三四五六七八九'[day - 1];
             if (day < 20) return '十' + (day > 10 ? '一二三四五六七八九'[day - 11] : '');
             if (day < 30) return '廿' + (day > 20 ? '一二三四五六七八九'[day - 21] : '');
             return '三十';
+        }
+
+        function getLunarDate(startDate, offsetDays) {
+            let lunarMonthIndex = 0;
+            let lunarDay = 1;
+
+            while (offsetDays >= lunarMonths[lunarMonthIndex].days) {
+                offsetDays -= lunarMonths[lunarMonthIndex].days;
+                lunarMonthIndex++;
+                lunarDay = 1;
+            }
+
+            lunarDay += offsetDays;
+            return { monthIndex: lunarMonthIndex, day: lunarDay };
         }
 
         function daysBetween(startDate, endDate) {
@@ -197,14 +242,15 @@
                 const isWeekend = currentDate.getDay() === 0 || currentDate.getDay() === 6;
                 const dateClass = isWeekend ? 'weekend' : '';
 
-                const lunarDay = (totalDays % 30) + 1;
+                const lunarInfo = getLunarDate(baseDate, totalDays);
+                const lunarDayText = convertToLunarText(lunarInfo.day);
                 let badgeHTML = '';
 
                 for (const [market, days] of Object.entries(lunarMarketDays)) {
-                    if (days.includes(lunarDay)) {
+                    if (days.includes(lunarInfo.day)) {
                         badgeHTML = `
                             <div class="badge-container">
-                                <div class="badge-day">${convertToLunarText(lunarDay)}</div>
+                                <div class="badge-day">${lunarDayText}</div>
                                 <div class="badge-market">${market}</div>
                             </div>
                         `;
@@ -218,7 +264,7 @@
                         <td>${primary}</td>
                         <td>${secondary}</td>
                         <td>${tertiary}</td>
-                        <td class="note">${badgeHTML}</td> <!-- 添加类 -->
+                        <td class="note">${badgeHTML}</td>
                     </tr>
                 `;
 
