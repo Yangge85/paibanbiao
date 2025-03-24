@@ -105,6 +105,20 @@
             width: 2rem;
         }
 
+        /* 新增公告栏样式 */
+        .announcement {
+            text-align: center;
+            margin: 30px auto 20px;
+            font-size: 1.4rem;
+            color: #e74c3c;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            width: fit-content;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.2rem;
@@ -125,6 +139,11 @@
 
             .schedule td:nth-child(6) {
                 width: 120px;
+            }
+
+            .announcement {
+                font-size: 1.2rem;
+                margin-top: 20px;
             }
         }
     </style>
@@ -152,14 +171,10 @@
             </thead>
             <tbody></tbody>
         </table>
-        <div>
-            <font size="4" color="#FF0000">
 
-                ※※提醒：每月别忘了开油票※※
-            </font>
-        </div>
+        <!-- 新增公告栏 -->
+        <div class="announcement">⚠️ 别忘了每月开油票 ⚠️</div>
     </div>
-
 
     <script>
         const persons = [
@@ -201,7 +216,6 @@
             { days: 30 }, // 冬月
             { days: 29 }  // 腊月
         ];
-
 
         function convertToLunarText(day) {
             if (day < 10) return '初' + '一二三四五六七八九'[day - 1];
@@ -290,5 +304,4 @@
         });
     </script>
 </body>
-
 </html>
