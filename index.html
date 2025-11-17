@@ -105,6 +105,20 @@
             width: 2rem;
         }
 
+        /* 新增公告栏样式 */
+        .announcement {
+            text-align: center;
+            margin: 30px auto 20px;
+            font-size: 1.4rem;
+            color: #e74c3c;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            width: fit-content;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.2rem;
@@ -125,6 +139,11 @@
 
             .schedule td:nth-child(6) {
                 width: 120px;
+            }
+
+            .announcement {
+                font-size: 1.2rem;
+                margin-top: 20px;
             }
         }
     </style>
@@ -152,6 +171,12 @@
             </thead>
             <tbody></tbody>
         </table>
+
+        <!-- 新增公告栏 -->
+        <div><a class="link"
+                href="https://yangge85.github.io/YGstudy/%E9%80%80%E4%BC%91%E5%80%92%E8%AE%A1%E6%97%B6/index.html">退休倒计时</a>
+        </div>
+        <div class="announcement">⚠️ 别忘了开油票 ⚠️</div>
     </div>
 
     <script>
@@ -166,7 +191,7 @@
 
         const lunarMonths = [
             { days: 30 }, // 十月
-            { days: 29 }, // 冬月
+            { days: 30 }, // 冬月
             { days: 30 }, // 腊月
             { days: 30 }, // 正月
             { days: 29 }, // 二月
@@ -194,7 +219,6 @@
             { days: 30 }, // 冬月
             { days: 29 }  // 腊月
         ];
-
 
         function convertToLunarText(day) {
             if (day < 10) return '初' + '一二三四五六七八九'[day - 1];
