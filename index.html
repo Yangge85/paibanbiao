@@ -193,7 +193,7 @@
         const lunarMonths = [
             { days: 30 }, // 十月
             { days: 30 }, // 冬月
-            { days: 30 }, // 腊月
+            { days: 29 }, // 腊月
             { days: 30 }, // 正月
             { days: 29 }, // 二月
             { days: 30 }, // 三月
@@ -220,6 +220,7 @@
             { days: 30 }, // 冬月
             { days: 29 }  // 腊月
         ];
+
 
         function convertToLunarText(day) {
             if (day < 10) return '初' + '一二三四五六七八九'[day - 1];
